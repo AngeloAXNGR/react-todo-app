@@ -137,6 +137,16 @@ function App() {
     return [...tasks, {id: nanoid(), taskTitle:taskForm.taskTitle}]
   }
 
+  const deleteTask = (taskId) =>{
+    setTodo(prevTodo => {
+      return prevTodo.map(project =>{
+        return project.selected ?
+        {...project, tasks: project.tasks.filter(task => task.id !== taskId)} : project
+      })
+    })
+  }
+
+
   React.useEffect(()=>{
     for(let i = 0; i < todo.length; i++){
       if(todo[i].selected){
@@ -145,7 +155,15 @@ function App() {
     }
   },[todo])
 
-  const taskItems = taskList.map(task => {return(<Task key={task.id} taskTitle={task.taskTitle}/>)})
+  const taskItems = taskList.map(task => 
+    { return(
+      <Task 
+        key={task.id} 
+        id={task.id} 
+        taskTitle={task.taskTitle}
+        deleteTask={() => deleteTask(task.id)}
+        />)
+    })
 
   // console.log(taskItems);
   // console.log(todo);
