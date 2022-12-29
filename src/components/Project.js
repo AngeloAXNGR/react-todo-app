@@ -1,4 +1,5 @@
 import React from "react"
+
 const Project = (props) =>{
   const [projectTitle, setProjectTitle] = React.useState({title: props.title})
 
@@ -12,8 +13,12 @@ const Project = (props) =>{
     console.log(projectTitle);
   }
 
+  const styles = {
+    border: props.selected ? "2px solid black" : "none"
+  }
+
   return(
-    <div className="project-item">
+    <div style={styles} onClick={props.toggleSelected} className="project-item">
       {!props.currentlyEditing && <h2>{props.title}</h2>}
       {props.currentlyEditing && 
         <input 
