@@ -11,6 +11,7 @@ import './App.css';
 function App() {
   const [projectForm, setProjectForm] = React.useState({title: ''});
   const [taskForm, setTaskForm] = React.useState({taskTitle:''});
+  const [displayTitle, setDisplayTitle] = React.useState('');
   
   const [todo, setTodo] = React.useState( () => { return JSON.parse(localStorage.getItem("todo")) || []})
   const [taskList, setTaskList] = React.useState([]);
@@ -18,18 +19,32 @@ function App() {
   const [showProjectForm, setShowProjectForm] = React.useState(false);
   const [showTaskForm, setShowTaskForm] = React.useState(false);
 
-  const [isHover, setIsHover] = React.useState(false);
+  const [addProjectHover, setAddProjectHover] = React.useState(false);
+  const [addTaskHover, setAddTaskHover] = React.useState(false);
 
-  const handleMouseEnter = () =>{
-    setIsHover(true);
+
+  const handleMouseEnter = (event) =>{
+    if(event.target.id === "add-project-button"){
+      setAddProjectHover(true);
+    }else{
+      setAddTaskHover(true)
+    }
   }
 
-  const handleMouseLeave = () =>{
-    setIsHover(false);
+  const handleMouseLeave = (event) =>{
+    if(event.target.id === "add-project-button"){
+      setAddProjectHover(false);
+    }else{
+      setAddTaskHover(false)
+    }
   }
 
-  const hoverStyles = {
-    backgroundColor: isHover ? "#CCCCCC" : "white",
+  const projectHoverStyles = {
+    backgroundColor: addProjectHover ? "#CCCCCC" : "transparent",
+  }
+
+  const taskHoverStyles = {
+    backgroundColor: addTaskHover ? "#CCCCCC" : "transparent",
   }
   // Save Todo in LocalStorage
   React.useEffect(() => {
@@ -50,6 +65,12 @@ function App() {
       }
     })
 
+  }
+
+  const handleKeyPress = (event) =>{
+    if(event.key === "Enter"){
+      handleSubmit();
+    }
   }
 
   const handleSubmit = () =>{
@@ -77,7 +98,7 @@ function App() {
     })
 
     setTaskList([]);
-
+    setDisplayTitle('');
   }
 
   const setEditMode = (projectId) =>{
@@ -85,17 +106,18 @@ function App() {
     setTodo(prevTodo =>{
       return prevTodo.map(project =>{
         return project.id === projectId ? 
-        {...project, currentlyEditing: !project.currentlyEditing} : project
+        {...project, currentlyEditing: true} :  {...project, currentlyEditing: false} 
       })
     })
   }
 
   // Update project title and disable edit mode
+  
   const updateProject = (projectId, projectTitle) =>{
     setTodo(prevTodo => {
       return prevTodo.map(project =>{
         return project.id === projectId ?
-        {...project, title: projectTitle, currentlyEditing: !project.currentlyEditing} :
+        {...project, title: projectTitle, currentlyEditing: false} :
         project
       })
     })
@@ -147,8 +169,9 @@ function App() {
   }
 
   const handleTaskSubmit = () =>{
+    console.log('Called');
     if(taskForm.title === ''){
-      alert('A Project must have a name')
+      alert('A Task must have a name')
     }else{
       setTodo(prevTodo => {
         return prevTodo.map(project =>{
@@ -164,7 +187,13 @@ function App() {
   }
 
   const addTask = (tasks) =>{
-    return [...tasks, {id: nanoid(), taskTitle:taskForm.taskTitle}]
+    return [...tasks, 
+      {
+        id: nanoid(), 
+        taskTitle:taskForm.taskTitle, 
+        dueDate:'',
+        currentlyEditing: false,
+      }]
   }
 
   const deleteTask = (taskId) =>{
@@ -176,11 +205,42 @@ function App() {
     })
   }
 
+  const setTaskEditMode = (taskId) =>{
+    setTodo(prevTodo => {
+      return prevTodo.map(project =>{
+        return project.selected ?
+        {...project, tasks: setTaskEdit(project.tasks, taskId)} : project
+      })
+    })
+  }
+
+  const setTaskEdit = (tasks, taskId) =>{
+    return tasks.map(task =>{
+      return task.id === taskId ? {...task, currentlyEditing:true} : {...task, currentlyEditing:false}
+    })
+  }
+
+  const updateTask = (title, dueDate) =>{
+    setTodo(prevTodo => {
+      return prevTodo.map(project =>{
+        return project.selected ?
+        {...project, tasks: submitNewTaskData(project.tasks, title, dueDate)} : project
+      })
+    })
+  }
+
+  const submitNewTaskData = (tasks, title, dueDate) =>{
+    return tasks.map(task =>{
+      return task.currentlyEditing === true ? {...task, taskTitle:title, dueDate:dueDate, currentlyEditing:false} : {...task, currentlyEditing:false}
+    })
+  }
+
 
   React.useEffect(()=>{
     for(let i = 0; i < todo.length; i++){
       if(todo[i].selected){
         setTaskList(todo[i].tasks)
+        setDisplayTitle(todo[i].title)
       }
     }
   },[todo])
@@ -191,9 +251,14 @@ function App() {
         key={task.id} 
         id={task.id} 
         taskTitle={task.taskTitle}
+        dueDate={task.dueDate}
         deleteTask={() => deleteTask(task.id)}
+        currentlyEditing={task.currentlyEditing}
+        setTaskEditMode={() => setTaskEditMode(task.id)}
+        updateTask ={updateTask}
         />)
     })
+
 
   return (
     <div className="app">
@@ -203,15 +268,15 @@ function App() {
       </header>
 
       <main>
+        {/* Sidebar */}
         <div className="side-bar">
-          <h1>Projects</h1>
+          <h2>Projects</h2>
           <div className="projects">
             {projectItems}
-            {! showProjectForm && <div style={hoverStyles} className="add-project-button" onClick={openProjectForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            {! showProjectForm && <div style={projectHoverStyles} id="add-project-button" onClick={openProjectForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
               <img src={addIcon} alt="" />
               <p>Add Project</p>
             </div>}
-
             {showProjectForm && <div className="add-project">
               <input
               type="text"
@@ -219,6 +284,7 @@ function App() {
               id="add-project-input"
               value={projectForm.title}
               onChange={handleOnChange}
+              onKeyPress={handleKeyPress}
               />
               <div className="project-form-buttons">
                 <button onClick={handleSubmit} className="add-button">Add</button>
@@ -227,9 +293,20 @@ function App() {
             </div>}
           </div>
         </div>
-        <div className="tasks">
+        {/* End Sidebar */}
+
+        {/* Task List */}
+        {displayTitle === '' && <div className="tasks">
+            <h1 className="no-project-message">You have no Projects currently selected</h1>
+          </div>}
+
+        {displayTitle !== '' && <div className="tasks">
+          <h1>{displayTitle}</h1>
           {taskItems}
-          {!showTaskForm && <button onClick={openTaskForm}>Add Task</button>}
+          {!showTaskForm && <div style={taskHoverStyles} id="add-task-button" onClick={openTaskForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              <img src={addIcon} alt="" />
+              <p>Add Task</p>
+            </div>}
           {showTaskForm && <div className="add-task">
             <input
               type="text"
@@ -239,7 +316,9 @@ function App() {
             />
             <button onClick={handleTaskSubmit}>Add</button>
           </div>}
-        </div>
+        </div>}
+        {/* End Task List */}
+
       </main>
     </div>
   );
