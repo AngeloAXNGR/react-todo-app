@@ -27,7 +27,7 @@ const Project = (props) =>{
   }
 
   const styles = {
-    backgroundColor: props.selected || isHover ? "#CCCCCC" : "white",
+    backgroundColor: props.selected || isHover ? "#CCCCCC" : "transparent",
   }
 
 
