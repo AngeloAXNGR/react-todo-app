@@ -2,6 +2,9 @@ import React from 'react';
 import { nanoid } from 'nanoid';
 import Project from './components/Project';
 import Task from './components/Task';
+import headerIcon from './images/header-icon.svg';
+import addIcon from './images/add-icon.svg';
+
 
 import './App.css';
 
@@ -12,11 +15,31 @@ function App() {
   const [todo, setTodo] = React.useState( () => { return JSON.parse(localStorage.getItem("todo")) || []})
   const [taskList, setTaskList] = React.useState([]);
 
+  const [showProjectForm, setShowProjectForm] = React.useState(false);
+  const [showTaskForm, setShowTaskForm] = React.useState(false);
 
+  const [isHover, setIsHover] = React.useState(false);
+
+  const handleMouseEnter = () =>{
+    setIsHover(true);
+  }
+
+  const handleMouseLeave = () =>{
+    setIsHover(false);
+  }
+
+  const hoverStyles = {
+    backgroundColor: isHover ? "#CCCCCC" : "white",
+  }
   // Save Todo in LocalStorage
   React.useEffect(() => {
     return localStorage.setItem("todo", JSON.stringify(todo));
   }, [todo])
+
+
+  const openProjectForm = () =>{
+    setShowProjectForm(prevShow => {return !prevShow});
+  }
 
   const handleOnChange = (event) =>{
     const {name, value, type, checked} = event.target;
@@ -43,6 +66,7 @@ function App() {
         }]
       })
       setProjectForm({title:''})
+      setShowProjectForm(prevShow => {return !prevShow});
     }
 
   }
@@ -105,6 +129,11 @@ function App() {
 
   
   // Task Functions
+
+  const openTaskForm = () =>{
+    setShowTaskForm(prevShow => {return !prevShow})
+  }
+
   const handleTaskForm = (event) => {
     const {name, value, type, checked} = event.target;
 
@@ -129,6 +158,7 @@ function App() {
         })
       })
       setTaskForm({taskTitle:''})
+      setShowTaskForm(prevShow => {return !prevShow})
     }
 
   }
@@ -165,38 +195,52 @@ function App() {
         />)
     })
 
-  // console.log(taskItems);
-  // console.log(todo);
   return (
     <div className="app">
       <header>
-        <input 
-        type="text" 
-        name="title"
-        value={projectForm.title}
-        onChange={handleOnChange}
-        />
-        <button onClick={handleSubmit}>Add Project</button>
+        <img src={headerIcon} alt="" />
+        <h1 className="app-title">To-do List Application</h1>
       </header>
 
-      <div className="task-form">
-        <input 
-          type="text" 
-          name="taskTitle"
-          value={taskForm.taskTitle}
-          onChange={handleTaskForm}
-        />
+      <main>
+        <div className="side-bar">
+          <h1>Projects</h1>
+          <div className="projects">
+            {projectItems}
+            {! showProjectForm && <div style={hoverStyles} className="add-project-button" onClick={openProjectForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              <img src={addIcon} alt="" />
+              <p>Add Project</p>
+            </div>}
 
-        <button onClick={handleTaskSubmit}>Add Task</button>
-      </div>
-
-      <div className="projects">
-        {projectItems}
-      </div>
-
-      <div className="tasks">
-        {taskItems}
-      </div>
+            {showProjectForm && <div className="add-project">
+              <input
+              type="text"
+              name="title"
+              id="add-project-input"
+              value={projectForm.title}
+              onChange={handleOnChange}
+              />
+              <div className="project-form-buttons">
+                <button onClick={handleSubmit} className="add-button">Add</button>
+                <button onClick={openProjectForm} className="cancel-button">Cancel</button>
+              </div>
+            </div>}
+          </div>
+        </div>
+        <div className="tasks">
+          {taskItems}
+          {!showTaskForm && <button onClick={openTaskForm}>Add Task</button>}
+          {showTaskForm && <div className="add-task">
+            <input
+              type="text"
+              name="taskTitle"
+              value={taskForm.taskTitle}
+              onChange={handleTaskForm}
+            />
+            <button onClick={handleTaskSubmit}>Add</button>
+          </div>}
+        </div>
+      </main>
     </div>
   );
 }
