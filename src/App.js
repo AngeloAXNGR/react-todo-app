@@ -191,7 +191,7 @@ function App() {
       {
         id: nanoid(), 
         taskTitle:taskForm.taskTitle, 
-        dueDate:'',
+        dueDate:null,
         currentlyEditing: false,
       }]
   }
@@ -258,7 +258,6 @@ function App() {
         updateTask ={updateTask}
         />)
     })
-
 
   return (
     <div className="app">

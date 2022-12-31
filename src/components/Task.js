@@ -1,5 +1,4 @@
 import React from "react";
-
 const Task = (props) =>{
   const [taskData, setTaskData] = React.useState({taskTitle: props.taskTitle, taskDueDate: props.dueDate})
 
@@ -15,6 +14,8 @@ const Task = (props) =>{
     console.log(taskData);
   }
 
+  console.log(taskData);
+
   return(
     <div className="task-item">
       <div  onClick={props.deleteTask} className="checkbox">
@@ -27,17 +28,17 @@ const Task = (props) =>{
           value={taskData.taskTitle}
           className="title-input"
           onChange={handleChange} 
-          onBlur={() => props.updateTask(taskData.taskTitle, taskData.dueDate)}
+          onMouseLeave={() => props.updateTask(taskData.taskTitle, taskData.dueDate)}
           />}
-      {!props.currentlyEditing && <p onClick={props.setTaskEditMode} className="task-duedate">{props.dueDate === ''  || props.dueDate === undefined ? "No Due Date" : `${props.dueDate}`}</p>}
+      {!props.currentlyEditing && <p onClick={props.setTaskEditMode} className="task-duedate">{props.dueDate === null  || props.dueDate === undefined ? "No Due Date" : `${props.dueDate}`}</p>}
       {props.currentlyEditing && 
         <input 
           className="date-input"
           type="date" 
           name="dueDate"
-          value={taskData.taskDueDate}
           onChange={handleChange} 
-          onBlur={() => props.updateTask(taskData.taskTitle, taskData.dueDate)}
+          // onBlur={() => props.updateTask(taskData.taskTitle, taskData.dueDate)}
+          onMouseLeave={() => props.updateTask(taskData.taskTitle, taskData.dueDate)}
           />}
     </div>
   );
