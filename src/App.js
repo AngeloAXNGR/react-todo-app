@@ -168,7 +168,7 @@ function App() {
 
 
   const handleTaskSubmit = () =>{
-    if(taskForm.title === ''){
+    if(taskForm.taskTitle === ''){
       alert('A Task must have a name')
     }else{
       setTodo(prevTodo => {
