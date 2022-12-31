@@ -15,7 +15,6 @@ const Project = (props) =>{
         [name] : type === "checkbox" ? checked : value
       }
     })
-    console.log(projectTitle);
   }
 
   const handleMouseEnter = () =>{

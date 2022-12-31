@@ -68,8 +68,10 @@ function App() {
   }
 
   const handleKeyPress = (event) =>{
-    if(event.key === "Enter"){
+    if(event.key === "Enter" && event.target.id === "add-project-input"){
       handleSubmit();
+    }else if(event.key === "Enter" && event.target.id === "add-task-input"){
+      handleTaskSubmit();
     }
   }
 
@@ -102,7 +104,6 @@ function App() {
   }
 
   const setEditMode = (projectId) =>{
-    console.log(projectId);
     setTodo(prevTodo =>{
       return prevTodo.map(project =>{
         return project.id === projectId ? 
@@ -112,7 +113,6 @@ function App() {
   }
 
   // Update project title and disable edit mode
-  
   const updateProject = (projectId, projectTitle) =>{
     setTodo(prevTodo => {
       return prevTodo.map(project =>{
@@ -151,7 +151,6 @@ function App() {
 
   
   // Task Functions
-
   const openTaskForm = () =>{
     setShowTaskForm(prevShow => {return !prevShow})
   }
@@ -165,11 +164,10 @@ function App() {
       }
     });
 
-    console.log(taskForm);
   }
 
+
   const handleTaskSubmit = () =>{
-    console.log('Called');
     if(taskForm.title === ''){
       alert('A Task must have a name')
     }else{
@@ -315,6 +313,7 @@ function App() {
               className="add-form-input"
               value={taskForm.taskTitle}
               onChange={handleTaskForm}
+              onKeyPress={handleKeyPress}
             />
             <div className="form-buttons">
               <button onClick={handleTaskSubmit} className="add-button">Add</button>
