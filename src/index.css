@@ -36,8 +36,7 @@ main{
   background-color: rgb(245, 245, 245);
 }
 
-#add-project-button,
-#add-task-button{
+.add-form-button{
   cursor:pointer;
   display:flex;
   align-items: center;
@@ -46,27 +45,26 @@ main{
   border-radius:5px;
 }
 
-#add-project-button > p ,
-#add-task-button > p{
+.add-form-button > p{
   margin:0;
 }
 
 
-
-.add-project{
+.add-form{
   display:flex;
   flex-direction: column;
   padding: 5px;
   gap: 10px;
 }
 
-.project-form-buttons{
+
+.form-buttons{
   display:flex;
   justify-content: space-between;
   gap:10px;
 }
 
-#add-project-input{
+.add-form-input{
   margin:0;
   padding: 7.5px;
   border-radius:5px;
@@ -80,6 +78,7 @@ main{
   padding:7.5px;
   border:none;
   border-radius:5px;
+  cursor:pointer;
 }
 
 .add-button{
@@ -112,14 +111,23 @@ main{
   font-weight: 600;
 }
 
-#edit-title-input{
+.title-input{
   margin:0;
   padding: 7.5px;
   border-radius:5px;
-  border:none;
+  border:2px solid black;
   margin-right:auto;
+  background-color: white;
 }
 
+.date-input{
+  margin:0;
+  padding: 7.5px;
+  border-radius:5px;
+  border:2px solid black;
+  background-color: white;
+  margin-left:auto;
+}
 
 .tasks{
   flex:1;

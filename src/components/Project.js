@@ -39,8 +39,8 @@ const Project = (props) =>{
       {props.currentlyEditing && 
         <input 
           type="text"
-          id="edit-title-input"
           name="title"
+          className="title-input"
           value={projectTitle.title}
           onChange={handleChange}
         />}

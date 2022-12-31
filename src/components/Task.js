@@ -25,12 +25,14 @@ const Task = (props) =>{
           type="text" 
           name="taskTitle"
           value={taskData.taskTitle}
+          className="title-input"
           onChange={handleChange} 
           onBlur={() => props.updateTask(taskData.taskTitle, taskData.dueDate)}
           />}
       {!props.currentlyEditing && <p onClick={props.setTaskEditMode} className="task-duedate">{props.dueDate === ''  || props.dueDate === undefined ? "No Due Date" : `${props.dueDate}`}</p>}
       {props.currentlyEditing && 
         <input 
+          className="date-input"
           type="date" 
           name="dueDate"
           value={taskData.taskDueDate}
