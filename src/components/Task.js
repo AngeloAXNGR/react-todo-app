@@ -2,6 +2,20 @@ import React from "react";
 const Task = (props) =>{
   const [taskData, setTaskData] = React.useState({taskTitle: props.taskTitle, taskDueDate: props.dueDate})
 
+  const [isHover, setIsHover] = React.useState(false);
+
+  const handleMouseEnter = () =>{
+    setIsHover(true);
+  }
+
+  const handleMouseLeave = () =>{
+    setIsHover(false);
+  }
+
+  const styles = {
+    backgroundColor: props.selected || isHover ? "#CCCCCC" : "transparent",
+  }
+
 
   const handleChange = (event) =>{
     const {name, type, value, checked} = event.target;
@@ -11,13 +25,10 @@ const Task = (props) =>{
         [name] : type === "checkbox" ? checked : value
       }
     })
-    console.log(taskData);
   }
 
-  console.log(taskData);
-
   return(
-    <div className="task-item">
+    <div className="task-item" style={styles} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <div  onClick={props.deleteTask} className="checkbox">
       </div>
       {!props.currentlyEditing && <p className="task-title" onClick={props.setTaskEditMode}>{props.taskTitle}</p>}
