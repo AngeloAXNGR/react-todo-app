@@ -273,20 +273,21 @@ function App() {
           <h2>Projects</h2>
           <div className="projects">
             {projectItems}
-            {! showProjectForm && <div style={projectHoverStyles} id="add-project-button" onClick={openProjectForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            {! showProjectForm && <div style={projectHoverStyles} id="add-project-button" className="add-form-button" onClick={openProjectForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
               <img src={addIcon} alt="" />
               <p>Add Project</p>
             </div>}
-            {showProjectForm && <div className="add-project">
+            {showProjectForm && <div className="add-form">
               <input
               type="text"
               name="title"
               id="add-project-input"
               value={projectForm.title}
+              className="add-form-input"
               onChange={handleOnChange}
               onKeyPress={handleKeyPress}
               />
-              <div className="project-form-buttons">
+              <div className="form-buttons">
                 <button onClick={handleSubmit} className="add-button">Add</button>
                 <button onClick={openProjectForm} className="cancel-button">Cancel</button>
               </div>
@@ -303,18 +304,23 @@ function App() {
         {displayTitle !== '' && <div className="tasks">
           <h1>{displayTitle}</h1>
           {taskItems}
-          {!showTaskForm && <div style={taskHoverStyles} id="add-task-button" onClick={openTaskForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          {!showTaskForm && <div style={taskHoverStyles} id="add-task-button" className="add-form-button" onClick={openTaskForm} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
               <img src={addIcon} alt="" />
               <p>Add Task</p>
             </div>}
-          {showTaskForm && <div className="add-task">
+          {showTaskForm && <div className="add-form">
             <input
               type="text"
               name="taskTitle"
+              id="add-task-input"
+              className="add-form-input"
               value={taskForm.taskTitle}
               onChange={handleTaskForm}
             />
-            <button onClick={handleTaskSubmit}>Add</button>
+            <div className="form-buttons">
+              <button onClick={handleTaskSubmit} className="add-button">Add</button>
+              <button onClick={openTaskForm} className="cancel-button">Cancel</button>
+            </div>
           </div>}
         </div>}
         {/* End Task List */}
